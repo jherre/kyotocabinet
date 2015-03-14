@@ -18,7 +18,7 @@ kclibs = "-lkyotocabinet -lz -lstdc++ -lrt -lpthread -lm -lc" if(kclibs.length <
 if RbConfig::CONFIG["CPP"] =~ /clang/
   RbConfig::CONFIG["CPP"] = "g++ -E"
   case RbConfig::CONFIG["build_os"]
-  when /darwin12.[123]/i, /darwin1[10]/i
+  when /darwin14.[01234]/i, /darwin12.[1234]/i, /darwin1[10]/i
     RbConfig::CONFIG["CPP"] = "g++ -E -std=c++11"
   end
 end
