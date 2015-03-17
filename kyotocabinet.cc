@@ -25,6 +25,9 @@ extern "C" {
 #define _KC_YARV_
 #endif
 
+#if defined(HAVE_RB_THREAD_CALL_WITHOUT_GVL) && defined(HAVE_RUBY_THREAD_H)
+#include <ruby/thread.h>
+#endif
 
 // precedent type declaration
 class CursorBurrow;
@@ -599,17 +602,31 @@ class NativeFunction {
   virtual void operate() = 0;
   static void execute(NativeFunction* func) {
 #if defined(_KC_YARV_)
+    
+#if defined(HAVE_RB_THREAD_CALL_WITHOUT_GVL) && defined(HAVE_RUBY_THREAD_H)
+    rb_thread_call_without_gvl(execute_impl, func, RUBY_UBF_IO, NULL);
+#else
     rb_thread_blocking_region(execute_impl, func, RUBY_UBF_IO, NULL);
+#endif
+    
 #else
     func->operate();
 #endif
   }
- private:
+private:
+#if defined(HAVE_RB_THREAD_CALL_WITHOUT_GVL) && defined(HAVE_RUBY_THREAD_H)
+  static void* execute_impl(void* ptr) {
+    NativeFunction* func = (NativeFunction*)ptr;
+    func->operate();
+    return (void*)Qnil;
+  }
+#else
   static VALUE execute_impl(void* ptr) {
     NativeFunction* func = (NativeFunction*)ptr;
     func->operate();
     return Qnil;
   }
+#endif    
 };
 
 

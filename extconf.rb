@@ -35,6 +35,9 @@ printf("  CFLAGS = %s\n", $CFLAGS)
 printf("  LDFLAGS = %s\n", $LDFLAGS)
 printf("  libs = %s\n", $libs)
 
+have_func('rb_thread_call_without_gvl', %w{ruby/thread.h})
+have_func('rb_thread_blocking_region')
+
 if have_header('kccommon.h')
   $CPPFLAGS = "#{$CPPFLAGS} -std=c++11"
   create_makefile('kyotocabinet')
