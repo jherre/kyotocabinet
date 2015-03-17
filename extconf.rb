@@ -17,10 +17,11 @@ kclibs = "-lkyotocabinet -lz -lstdc++ -lrt -lpthread -lm -lc" if(kclibs.length <
 
 if RbConfig::CONFIG["CPP"] =~ /clang/
   RbConfig::CONFIG["CPP"] = "g++ -E"
-  case RbConfig::CONFIG["build_os"]
-  when /darwin14.[01234]/i, /darwin12.[1234]/i, /darwin1[10]/i
-    RbConfig::CONFIG["CPP"] = "g++ -E -std=c++11"
-  end
+end
+
+case RbConfig::CONFIG["build_os"]
+when /^darwin14\./i, /darwin12.[123]/i, /darwin1[10]/i
+  RbConfig::CONFIG["CPP"] = "g++ -E -std=c++11"
 end
 
 $CFLAGS = "-I. #{kccflags} -Wall #{$CFLAGS} -O2"
@@ -29,9 +30,10 @@ $LDFLAGS = "#{$LDFLAGS} -L. #{kcldflags}"
 $libs = "#{$libs} #{kclibs}"
 
 printf("setting variables ...\n")
-printf("  \$CFLAGS = %s\n", $CFLAGS)
-printf("  \$LDFLAGS = %s\n", $LDFLAGS)
-printf("  \$libs = %s\n", $libs)
+printf("  CPP = %s\n", RbConfig::CONFIG["CPP"])
+printf("  CFLAGS = %s\n", $CFLAGS)
+printf("  LDFLAGS = %s\n", $LDFLAGS)
+printf("  libs = %s\n", $libs)
 
 if have_header('kccommon.h')
   $CPPFLAGS = "#{$CPPFLAGS} -std=c++11"
