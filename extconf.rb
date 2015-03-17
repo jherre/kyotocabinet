@@ -21,7 +21,7 @@ end
 
 case RbConfig::CONFIG["build_os"]
 when /^darwin14\./i, /darwin12.[123]/i, /darwin1[10]/i
-  RbConfig::CONFIG["CPP"] = "g++ -E -std=c++11"
+  RbConfig::CONFIG["CPP"] = "g++ -E -std=c++11 -stdlib=libc++"
 end
 
 $CFLAGS = "-I. #{kccflags} -Wall #{$CFLAGS} -O2"
