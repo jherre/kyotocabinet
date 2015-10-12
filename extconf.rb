@@ -25,6 +25,7 @@ when /^darwin14\./i, /darwin12.[123]/i, /darwin1[10]/i
 end
 
 $CFLAGS = "-I. #{kccflags} -Wall #{$CFLAGS} -O2"
+$CPPFLAGS = $CPPFLAGS + " -I. #{kccflags}"
 $LDFLAGS = $LDFLAGS.sub(/\-L\/\S+/, '')
 $LDFLAGS = "#{$LDFLAGS} -L. #{kcldflags}"
 $libs = "#{$libs} #{kclibs}"
